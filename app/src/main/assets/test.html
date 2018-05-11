@@ -1,0 +1,202 @@
+<head>
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<style> 
+  input {
+   font-size: 30px;
+  }
+  span{
+    font-size: 30px;
+  }
+</style>
+<body>
+  <div>
+    <h1>Please select a desired activity</h1>
+  </div>
+  <div style="position:fixed; left:700px; top:10px;">
+  <fieldset>
+  <legend>Legend:</legend>
+    <span style="color:#00FF00">1. Running</span></br>
+    <span style="color:#FF0000">2. Walking</span></br>
+    <span style="color:#0000FF">3. Jumping</span></br>
+  </fieldset>
+  </div>
+   <div> <input type="checkbox" id="Running" onclick="myFunction()"> <span>Running</span>
+        <br/>
+        <input type="checkbox" id="Walking" onclick="myFunction()"> <span>Walking </span>
+        <br/>
+        <input type="checkbox" id="Jumping" onclick="myFunction()"> <span> Jumping</span>
+        <br/>
+  </div> 
+  <div id="graph"></div>
+</body>
+
+<script type="text/javascript"> 
+
+var layout;
+var data;
+var tr = new Array(50);
+var counter = 0;
+var e = new Array(50);
+
+Plotly.d3.csv("https://raw.githubusercontent.com/vinaybhargav-ar/MobileComputing/master/activitydb.csv", function(err, rows){
+      function unpack(rows, key) {
+          return rows.map(function(row) 
+          { return row[key]; }); }
+var i, j;
+var columnX = new Array(50);
+var columnY = new Array(50);
+var columnZ = new Array(50);
+layout = {margin: {
+  l: 0,
+  r: 0,
+  b: 0,
+  t: 0
+  }};
+
+for (i = 0; i < 50; i++) 
+{ 
+    columnX[i] = unpack(rows , 'AccelX_'+(i+1));
+    columnY[i] = unpack(rows , 'AccelY_'+(i+1));
+    columnZ[i] = unpack(rows , 'AccelZ_'+(i+1));
+}          
+
+for (i = 0; i < 48; i++) 
+{ 
+
+  var X = new Array(50);
+  var Y = new Array(50);
+  var Z = new Array(50);
+  
+  for (j = 0; j < 50; j++)
+  {
+    X[j] = columnX[j][i];
+    Y[j] = columnY[j][i];
+    Z[j] = columnZ[j][i];
+    e[j] = 0;
+  } 
+var col;
+if (i >= 0 && i <16)
+{
+  col = 'red';
+}
+else if (i>=16 && i < 32)
+{
+  col = 'blue'; 
+}
+else
+{
+  col = 'green';
+}
+
+    tr[i]={ x:X,
+            y:Y,
+            z:Z,
+            type: 'scatter3d',
+            mode: 'lines',
+            showlegend: false,
+            legend: {
+                      x: 100,
+                      y: 1
+                    },
+            line: {
+                  width: 6,
+                  color: col,
+                  reversescale: false
+                }
+
+        };    
+}
+});
+
+/*data = [tr[0],tr[1],tr[2],tr[3],tr[4],tr[5],tr[6],tr[7],tr[8],tr[9],
+            tr[10],tr[11],tr[12],tr[13],tr[14],tr[15],tr[16],tr[17],tr[18],tr[19],
+            tr[20],tr[21],tr[22],tr[23],tr[24],tr[25],tr[26],tr[27],tr[28],tr[29],
+            tr[30],tr[31],tr[32],tr[33],tr[34],tr[35],tr[36],tr[37],tr[38],tr[39],
+            tr[40],tr[41],tr[42],tr[43],tr[44],tr[45],tr[46],tr[47]];
+            Plotly.newPlot('graph', data, layout);
+*/
+function myFunction() {
+  var checkBoxRun = document.getElementById("Running");
+  var checkBoxWalk = document.getElementById("Walking");
+  var checkBoxJump = document.getElementById("Jumping");
+  //var text = document.getElementById("run");
+  if ((checkBoxRun.checked == true) && (checkBoxWalk.checked == false) && (checkBoxJump.checked == false)){
+    data = [
+            tr[32],tr[33],tr[34],tr[35],tr[36],tr[37],tr[38],tr[39],tr[40],tr[41],
+            tr[42],tr[43],tr[44],tr[45],tr[46],tr[47]];
+            Plotly.newPlot('graph', data, layout);
+            counter = 16;
+  } 
+  else if ((checkBoxRun.checked == false) && (checkBoxWalk.checked == true) && (checkBoxJump.checked == false)) {
+    data = [
+            tr[0],tr[1],tr[2],tr[3],tr[4],tr[5],tr[6],tr[7],tr[8],tr[9],
+            tr[10],tr[11],tr[12],tr[13],tr[14],tr[15]];
+            Plotly.newPlot('graph', data, layout);
+            counter = 16;
+  }
+  else if ((checkBoxRun.checked == true) && (checkBoxWalk.checked == true) && (checkBoxJump.checked == false)) {
+    data = [
+            tr[0],tr[1],tr[2],tr[3],tr[4],tr[5],tr[6],tr[7],tr[8],tr[9],
+            tr[10],tr[11],tr[12],tr[13],tr[14],tr[15],
+            tr[32],tr[33],tr[34],tr[35],tr[36],tr[37],tr[38],tr[39],tr[40],tr[41],
+            tr[42],tr[43],tr[44],tr[45],tr[46],tr[47]];
+            Plotly.newPlot('graph', data, layout);
+            counter = 32;
+  }
+  else if ((checkBoxRun.checked == false) && (checkBoxWalk.checked == false) && (checkBoxJump.checked == true)) {
+    data = [
+            tr[16],tr[17],tr[18],tr[19],tr[20],tr[21],tr[22],tr[23],tr[24],tr[25],
+            tr[26],tr[27],tr[28],tr[29],tr[30],tr[31]];
+            Plotly.newPlot('graph', data, layout);
+            counter = 16;
+  }
+  else if ((checkBoxRun.checked == true) && (checkBoxWalk.checked == false) && (checkBoxJump.checked == true)) {
+    data = [
+            tr[16],tr[17],tr[18],tr[19],tr[20],tr[21],tr[22],tr[23],tr[24],tr[25],
+            tr[26],tr[27],tr[28],tr[29],tr[30],tr[31],
+            tr[32],tr[33],tr[34],tr[35],tr[36],tr[37],tr[38],tr[39],tr[40],tr[41],
+            tr[42],tr[43],tr[44],tr[45],tr[46],tr[47]];
+            Plotly.newPlot('graph', data, layout);
+            counter = 32;
+  }
+  else if ((checkBoxRun.checked == false) && (checkBoxWalk.checked == true) && (checkBoxJump.checked == true)) {
+    data = [
+            tr[0],tr[1],tr[2],tr[3],tr[4],tr[5],tr[6],tr[7],tr[8],tr[9],
+            tr[10],tr[11],tr[12],tr[13],tr[14],tr[15],
+            tr[16],tr[17],tr[18],tr[19],tr[20],tr[21],tr[22],tr[23],tr[24],tr[25],
+            tr[26],tr[27],tr[28],tr[29],tr[30],tr[31]];
+            Plotly.newPlot('graph', data, layout);
+            counter = 32;
+  }
+  else if ((checkBoxRun.checked == true) && (checkBoxWalk.checked == true) && (checkBoxJump.checked == true)) {
+    data =[
+            tr[0],tr[1],tr[2],tr[3],tr[4],tr[5],tr[6],tr[7],tr[8],tr[9],
+            tr[10],tr[11],tr[12],tr[13],tr[14],tr[15],tr[16],tr[17],tr[18],tr[19],
+            tr[20],tr[21],tr[22],tr[23],tr[24],tr[25],tr[26],tr[27],tr[28],tr[29],
+            tr[30],tr[31],tr[32],tr[33],tr[34],tr[35],tr[36],tr[37],tr[38],tr[39],
+            tr[40],tr[41],tr[42],tr[43],tr[44],tr[45],tr[46],tr[47]];
+            Plotly.newPlot('graph', data, layout);
+            counter = 48;
+  }
+  else
+  {
+    for(var i =0;i<data.length;i++)
+    {
+      var test = {
+        type: 'scatter3d',
+              mode: 'lines',
+              line: {
+                      width: 6,
+                      color: 'white',
+                      reversescale: false
+                    }
+                  }
+      data = [test];
+      Plotly.newPlot('graph', data, layout);
+    }
+            
+  }
+}
+
+</script>
