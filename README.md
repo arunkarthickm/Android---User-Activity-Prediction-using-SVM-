@@ -1,1 +1,1 @@
-# Android - User Activity Predicttion using SVM 
+# Android - User Activity Prediction using SVM 
